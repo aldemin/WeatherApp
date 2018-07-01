@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/main_menu_today"
+            android:icon="@drawable/ic_menu_home"
+            android:checked="true"
+            android:title="@string/weather_today" />
+
+        <item
+            android:id="@+id/main_menu_week"
+            android:icon="@drawable/ic_menu_diagram"
+            android:title="@string/weather_for_a_week" />
+
+        <item
+            android:id="@+id/main_menu_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/settings" />
+    </group>
+
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/main_menu_write"
+                android:icon="@drawable/ic_menu_email"
+                android:title="@string/write_to_developer" />
+            <item
+                android:id="@+id/main_menu_about"
+                android:icon="@drawable/ic_menu_about"
+                android:title="@string/about_developer" />
+        </menu>
+    </item>
+
+</menu>
