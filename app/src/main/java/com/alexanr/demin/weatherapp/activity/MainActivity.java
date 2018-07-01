@@ -2,6 +2,7 @@ package com.alexanr.demin.weatherapp.activity;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,8 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alexanr.demin.weatherapp.R;
@@ -20,6 +25,9 @@ import com.alexanr.demin.weatherapp.service.WeatherInfoLoader;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int WEATHER_LOAD_KEY = 1;
+    private static final String CITY_PREF_KEY = "92hf3902hf02f";
+
+    private final String preferenceFileName = "myPref";
 
     public static final String PI_TAG = "pending";
     public static final String CITY_TAG = "city";
@@ -32,9 +40,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     View header;
     TextView temp;
-    TextView city;
+    TextView headerCity;
+    EditText enterCity;
+    Button enterCityOkBtn;
 
-    String cityValue = "moscow";
+    String cityValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = findViewById(R.id.main_drawer);
         navigationView = findViewById(R.id.nav_view);
         header = navigationView.inflateHeaderView(R.layout.header);
+        enterCity = findViewById(R.id.edit_city);
+        enterCityOkBtn = findViewById(R.id.button_ok);
 
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
@@ -53,9 +65,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        PendingIntent pi = createPendingResult(WEATHER_LOAD_KEY, new Intent(), 0);
-        startService(new Intent(this, WeatherInfoLoader.class)
-                .putExtra(PI_TAG, pi)
+        final SharedPreferences sharedPref = getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+        cityValue = sharedPref.getString(CITY_PREF_KEY, null);
+
+        if (cityValue == null) {
+            setTextWatcher();
+            this.enterCityOkBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cityValue = enterCity.getText().toString();
+                    sharedPref.edit().putString(CITY_PREF_KEY, cityValue).apply();
+                    startService();
+
+                }
+            });
+        } else {
+            startService();
+        }
+
+    }
+
+    private void startService() {
+        findViewById(R.id.main_city_enter).setVisibility(View.GONE);
+        findViewById(R.id.main_loading).setVisibility(View.VISIBLE);
+        Intent intent = new Intent(getApplicationContext(), WeatherInfoLoader.class);
+        PendingIntent pi = createPendingResult(WEATHER_LOAD_KEY, intent, 0);
+        startService(intent.putExtra(PI_TAG, pi)
                 .putExtra(CITY_TAG, cityValue));
     }
 
@@ -97,10 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void fillDrawer(Intent data) {
         temp = header.findViewById(R.id.header_weather_temp);
-        city = header.findViewById(R.id.header_city);
-        String tmp = String.format("+%.0f",(data.getDoubleExtra(TodayFragment.TEMP_KEY,0) - 273.15));
+        headerCity = header.findViewById(R.id.header_city);
+        String tmp = String.format("+%.0f", (data.getDoubleExtra(TodayFragment.TEMP_KEY, 0) - 273.15));
         temp.setText(tmp);
-        city.setText(cityValue.toUpperCase());
+        headerCity.setText(cityValue.toUpperCase());
         inflateFragment(data);
     }
 
@@ -108,7 +143,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TodayFragment fragment = new TodayFragment();
         fragment.setArguments(data.getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.main_layout_fragment, fragment).commit();
-        findViewById(R.id.main_loading).setVisibility(View.GONE);
+        findViewById(R.id.main_city_enter_layout).setVisibility(View.GONE);
         findViewById(R.id.main_drawer).setVisibility(View.VISIBLE);
+    }
+
+    private void setTextWatcher() {
+        this.enterCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().length() > 0) {
+                    enterCityOkBtn.setEnabled(true);
+                } else {
+                    enterCityOkBtn.setEnabled(false);
+                }
+            }
+        });
     }
 }
