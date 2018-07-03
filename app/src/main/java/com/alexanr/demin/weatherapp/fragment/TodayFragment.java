@@ -9,15 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alexanr.demin.weatherapp.R;
+import com.alexanr.demin.weatherapp.util.Constants;
 
 public class TodayFragment extends Fragment {
-
-    public static final String TEMP_KEY = "temperature";
-    public static final String TEMP_MAX_KEY = "temperatureMax";
-    public static final String TEMP_MIN_KEY = "temperatureMin";
-    public static final String WEATHER_PARAMS_KEY = "weatherParams";
-    public static final String HUMIDITY_KEY = "humidity";
-    public static final String PRESSURE_KEY = "pressure";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,18 +25,18 @@ public class TodayFragment extends Fragment {
         TextView humidity = view.findViewById(R.id.today_hum_value);
         TextView pressure = view.findViewById(R.id.today_pres_value);
 
-        String tmp = String.format("+%.0f",(bundle.getDouble(TEMP_KEY) - 273.15));
+        String tmp = String.format("+%.0f",(bundle.getFloat(Constants.WEATHER_TEMP_TAG) - 273.15));
         temp.setText(tmp);
 
-        tmp = String.format("+%.0f",(bundle.getDouble(TEMP_MAX_KEY) - 273.15));
+        tmp = String.format("+%.0f",(bundle.getFloat(Constants.WEATHER_TEMP_MAX_TAG) - 273.15));
         tempMax.setText(tmp);
 
-        tmp = String.format("+%.0f",(bundle.getDouble(TEMP_MIN_KEY) - 273.15));
+        tmp = String.format("+%.0f",(bundle.getFloat(Constants.WEATHER_TEMP_MIN_TAG) - 273.15));
         tempMin.setText(tmp);
 
-        weatherParams.setText(bundle.getString(WEATHER_PARAMS_KEY).toUpperCase());
-        humidity.setText(bundle.getString(HUMIDITY_KEY));
-        pressure.setText(bundle.getString(PRESSURE_KEY));
+        weatherParams.setText(bundle.getString(Constants.WEATHER_PARAMS_TAG).toUpperCase());
+        humidity.setText(String.valueOf(bundle.getFloat(Constants.WEATHER_HUMIDITY_TAG)));
+        pressure.setText(String.valueOf(bundle.getFloat(Constants.WEATHER_PRESSURE_TAG)));
         return view;
     }
 

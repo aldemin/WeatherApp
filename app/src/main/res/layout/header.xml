@@ -25,8 +25,7 @@
             android:id="@+id/header_weather_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="45sp"
-            android:text="@string/main_temp"/>
+            android:textSize="45sp" />
 
         <TextView
             android:id="@+id/header_weather_temp_label"
@@ -43,8 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:textSize="45sp"
-        android:text="@string/main_city"/>
+        android:textSize="45sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

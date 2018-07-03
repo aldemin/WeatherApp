@@ -1,4 +1,4 @@
-package com.alexanr.demin.weatherapp;
+package com.alexanr.demin.weatherapp.fragment;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.alexanr.demin.weatherapp.R;
 
 public class SettingsFragment extends Fragment {
 
