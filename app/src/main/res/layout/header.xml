@@ -7,19 +7,23 @@
     android:layout_height="180dp"
     android:background="@color/colorPrimary">
 
+    <FrameLayout
+        android:id="@+id/header_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="30dp">
-
-        <ImageView
-            android:id="@+id/header_weather_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_header_sunny"/>
 
         <TextView
             android:id="@+id/header_weather_temp"
@@ -44,7 +48,7 @@
         android:layout_marginEnd="8dp"
         android:textSize="45sp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -55,14 +59,17 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:textSize="15sp"
+            android:layout_alignParentStart="true"
             android:text="@string/last_update"/>
 
         <TextView
             android:id="@+id/header_last_upd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="dfdf"
             android:textSize="15sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
