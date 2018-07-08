@@ -36,8 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="45sp"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/main_temp"/>
+                    android:layout_alignParentStart="true" />
 
                 <TextView
                     android:id="@+id/weather_item_temp_label"

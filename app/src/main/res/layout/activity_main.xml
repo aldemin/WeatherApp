@@ -57,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:enabled="false"
                 android:text="@string/ok" />
 
         </LinearLayout>
@@ -69,9 +70,9 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/main_loading_progress"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/loading" />
+                android:layout_height="wrap_content" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyle"

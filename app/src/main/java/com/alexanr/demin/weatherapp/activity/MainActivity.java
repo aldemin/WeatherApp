@@ -1,8 +1,6 @@
 package com.alexanr.demin.weatherapp.activity;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,19 +18,11 @@ import android.widget.TextView;
 
 import com.alexanr.demin.weatherapp.R;
 import com.alexanr.demin.weatherapp.fragment.TodayFragment;
-import com.alexanr.demin.weatherapp.service.WeatherInfoLoader;
+import com.alexanr.demin.weatherapp.network.WeatherLoader;
+import com.alexanr.demin.weatherapp.network.model.WeatherRequest;
+import com.alexanr.demin.weatherapp.util.Constants;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private static final int WEATHER_LOAD_KEY = 1;
-    private static final String CITY_PREF_KEY = "92hf3902hf02f";
-
-    private final String preferenceFileName = "myPref";
-
-    public static final String PI_TAG = "pending";
-    public static final String CITY_TAG = "city";
-
-    public final static int STATUS_FINISH = 200;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -44,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     EditText enterCity;
     Button enterCityOkBtn;
 
-    String cityValue;
+    WeatherLoader weatherLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,42 +46,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header = navigationView.inflateHeaderView(R.layout.header);
         enterCity = findViewById(R.id.edit_city);
         enterCityOkBtn = findViewById(R.id.button_ok);
+        temp = header.findViewById(R.id.header_weather_temp);
+        headerCity = header.findViewById(R.id.header_city);
 
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView.setNavigationItemSelectedListener(this);
 
-        final SharedPreferences sharedPref = getSharedPreferences(preferenceFileName, MODE_PRIVATE);
-        cityValue = sharedPref.getString(CITY_PREF_KEY, null);
+        //setCity(null);
 
-        if (cityValue == null) {
-            setTextWatcher();
-            this.enterCityOkBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cityValue = enterCity.getText().toString();
-                    sharedPref.edit().putString(CITY_PREF_KEY, cityValue).apply();
-                    startService();
-
-                }
-            });
+        if (getCity() == null) {
+            initTextWatcherListener();
+            initOkBtnListener();
         } else {
-            startService();
+            loadWeather();
         }
 
     }
 
-    private void startService() {
-        findViewById(R.id.main_city_enter).setVisibility(View.GONE);
-        findViewById(R.id.main_loading).setVisibility(View.VISIBLE);
-        Intent intent = new Intent(getApplicationContext(), WeatherInfoLoader.class);
-        PendingIntent pi = createPendingResult(WEATHER_LOAD_KEY, intent, 0);
-        startService(intent.putExtra(PI_TAG, pi)
-                .putExtra(CITY_TAG, cityValue));
+    private String getCity() {
+        final String emptyCity = null;
+        return getSharedPreferences(Constants.PREF_NAME_TAG, MODE_PRIVATE).getString(Constants.PREF_CITY_TAG, emptyCity);
+    }
+
+    private void setCity(String city) {
+        getSharedPreferences(Constants.PREF_NAME_TAG, MODE_PRIVATE).edit().putString(Constants.PREF_CITY_TAG, city).apply();
     }
 
     @Override
@@ -122,32 +104,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == STATUS_FINISH) {
-            fillDrawer(data);
-        }
-    }
+    private void inflateFragment(WeatherRequest request) {
+        Intent intent = new Intent().putExtra(Constants.WEATHER_TEMP_TAG, request.getMain().getTemp())
+                .putExtra(Constants.WEATHER_TEMP_MAX_TAG, request.getMain().getTemp_max())
+                .putExtra(Constants.WEATHER_TEMP_MIN_TAG, request.getMain().getTemp_min())
+                .putExtra(Constants.WEATHER_HUMIDITY_TAG, request.getMain().getHumidity())
+                .putExtra(Constants.WEATHER_PRESSURE_TAG, request.getMain().getPressure())
+                .putExtra(Constants.WEATHER_PARAMS_TAG, request.getWeather()[0].getMain());
 
-    private void fillDrawer(Intent data) {
-        temp = header.findViewById(R.id.header_weather_temp);
-        headerCity = header.findViewById(R.id.header_city);
-        String tmp = String.format("+%.0f", (data.getDoubleExtra(TodayFragment.TEMP_KEY, 0) - 273.15));
-        temp.setText(tmp);
-        headerCity.setText(cityValue.toUpperCase());
-        inflateFragment(data);
-    }
-
-    private void inflateFragment(Intent data) {
         TodayFragment fragment = new TodayFragment();
-        fragment.setArguments(data.getExtras());
+        fragment.setArguments(intent.getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.main_layout_fragment, fragment).commit();
-        findViewById(R.id.main_city_enter_layout).setVisibility(View.GONE);
-        findViewById(R.id.main_drawer).setVisibility(View.VISIBLE);
     }
 
-    private void setTextWatcher() {
+    private void initTextWatcherListener() {
         this.enterCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -166,5 +136,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+    }
+
+    private void initOkBtnListener() {
+        this.enterCityOkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCity(enterCity.getText().toString());
+                loadWeather();
+            }
+        });
+    }
+
+    private void loadWeather() {
+        final TextView loadingText = findViewById(R.id.main_loading_progress);
+        loadingText.setText(R.string.loading);
+
+        findViewById(R.id.main_city_enter).setVisibility(View.GONE);
+        findViewById(R.id.main_loading).setVisibility(View.VISIBLE);
+
+        weatherLoader = new WeatherLoader(new WeatherLoader.WeatherListener() {
+            @Override
+            public void onWeatherResponse(WeatherRequest request) {
+                String tmp = String.format("+%.0f",(request.getMain().getTemp()) - 273.15);
+                temp.setText(tmp);
+                headerCity.setText(request.getName());
+                findViewById(R.id.main_city_enter_layout).setVisibility(View.GONE);
+                findViewById(R.id.main_drawer).setVisibility(View.VISIBLE);
+                inflateFragment(request);
+            }
+
+            @Override
+            public void onWeatherFailure(String msg) {
+                findViewById(R.id.main_city_enter).setVisibility(View.GONE);
+                findViewById(R.id.main_loading).setVisibility(View.VISIBLE);
+                loadingText.setText(R.string.error);
+            }
+        });
+        weatherLoader.init();
+        weatherLoader.doRequest(getCity());
     }
 }
