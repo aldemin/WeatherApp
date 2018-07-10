@@ -24,6 +24,9 @@
     <string name="error">Error</string>
     <string name="city">City:</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_city">New city</string>
+    <string name="enter_city">Enter city:</string>
 
 
 </resources>

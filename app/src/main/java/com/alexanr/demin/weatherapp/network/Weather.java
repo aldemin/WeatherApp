@@ -1,6 +1,6 @@
 package com.alexanr.demin.weatherapp.network;
 
-import com.alexanr.demin.weatherapp.network.model.WeatherRequest;
+import com.alexanr.demin.weatherapp.network.request.WeatherRequest;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

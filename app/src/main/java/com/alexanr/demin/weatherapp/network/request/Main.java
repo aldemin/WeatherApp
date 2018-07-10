@@ -1,4 +1,4 @@
-package com.alexanr.demin.weatherapp.network.model;
+package com.alexanr.demin.weatherapp.network.request;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
