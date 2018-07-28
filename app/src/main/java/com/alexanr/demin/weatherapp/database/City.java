@@ -15,6 +15,16 @@ public class City {
     private int minTemperature;
     private int humidity;
     private int pressure;
+    private String weatherParams;
+
+    public String getWeatherParams() {
+        return weatherParams;
+    }
+
+    public void setWeatherParams(String weatherParams) {
+        this.weatherParams = weatherParams;
+    }
+
     private String lastUpd;
 
     public String getLastUpd() {

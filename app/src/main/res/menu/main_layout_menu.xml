@@ -13,16 +13,16 @@
         <item
             android:id="@+id/main_menu_week"
             android:icon="@drawable/ic_menu_diagram"
-            android:title="@string/weather_for_a_week" />
+            android:title="@string/weather_history" />
 
-        <item
-            android:id="@+id/main_menu_settings"
-            android:icon="@drawable/ic_menu_settings"
-            android:title="@string/settings" />
     </group>
 
-    <item android:title="@string/communicate">
+    <item android:title="@string/other">
         <menu>
+            <item
+                android:id="@+id/main_menu_settings"
+                android:icon="@drawable/ic_menu_settings"
+                android:title="@string/settings" />
             <item
                 android:id="@+id/main_menu_write"
                 android:icon="@drawable/ic_menu_email"
@@ -30,7 +30,7 @@
             <item
                 android:id="@+id/main_menu_about"
                 android:icon="@drawable/ic_menu_about"
-                android:title="@string/about_developer" />
+                android:title="@string/about_app" />
         </menu>
     </item>
 

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.alexanr.demin.weatherapp.database.Database;
 import com.alexanr.demin.weatherapp.network.WeatherLoader;
-import com.alexanr.demin.weatherapp.util.CityParser;
+import com.alexanr.demin.weatherapp.util.Parser;
 import com.alexanr.demin.weatherapp.util.Preferences;
 
 public class WeatherApp extends Application {
@@ -15,6 +15,6 @@ public class WeatherApp extends Application {
         Database.init(this);
         Preferences.init(this);
         WeatherLoader.init();
-        CityParser.init();
+        Parser.init();
     }
 }

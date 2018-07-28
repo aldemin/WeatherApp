@@ -49,4 +49,12 @@ public class Preferences {
         sharedPreferences.edit().putString(Constants.PREF_LAST_UPD_TIME_TAG, date).apply();
         return date;
     }
+
+    public String getMeasure() {
+        return sharedPreferences.getString(Constants.PREF_MEASURE_TAG, Constants.CELSIUS);
+    }
+
+    public void setMeasure(String measure) {
+        sharedPreferences.edit().putString(Constants.PREF_MEASURE_TAG, measure).apply();
+    }
 }

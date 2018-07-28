@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-public class Database{
+public class Database {
 
     private static final String DATABASE_NAME = "CitiesDB";
     private static Database database;
@@ -49,5 +49,9 @@ public class Database{
             }
         }
         return -1L;
+    }
+
+    public List<City> getCityList() {
+        return citiesDB.citiesDao().getAll();
     }
 }

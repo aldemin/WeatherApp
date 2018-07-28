@@ -25,4 +25,40 @@
         android:layout_marginBottom="4dp"
         android:hint="@string/new_city" />
 
+    <TextView
+        android:id="@+id/change_dialo_gps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/city_dialog_gps_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/find_by_gps"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/choose_measure_system"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/city_dialog_celsius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/celsius"/>
+
+        <RadioButton
+            android:id="@+id/city_dialog_fahrenheit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fahrenheit"/>
+
+    </RadioGroup>
+
 </LinearLayout>
