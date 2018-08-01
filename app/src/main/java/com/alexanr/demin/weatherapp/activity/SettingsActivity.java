@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Preferences.get().setMeasure(firstUpperCase(measureText.getText().toString()));
             }
             Preferences.get().setCity(cityText.getText().toString());
-            WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext());
+            WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext(), true);
         }
         return super.onOptionsItemSelected(item);
     }

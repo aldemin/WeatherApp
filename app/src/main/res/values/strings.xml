@@ -41,5 +41,9 @@
     <string name="send">Send</string>
     <string name="other">Other</string>
     <string name="last_update_parameters">Last update parameters.</string>
-    <string name="find_by_gps">Find by GPS</string>
+    <string name="gps">GPS</string>
+    <string name="greeting">Welcome to the Weather app.\n Please enter your city.</string>
+    <string name="empty_enter">Sorry, the input line is empty. Enter the city or use the GPS search feature.</string>
+    <string name="your_city_here">Your city here</string>
+    <string name="exit">exit</string>
 </resources>

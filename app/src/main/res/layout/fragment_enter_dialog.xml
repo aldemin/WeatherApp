@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/enter_dialog_greeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/greeting"
+        android:layout_margin="8dp"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/enter_dialog_city_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/enter_dialog_edit_city"
+            android:inputType="text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/your_city_here" />
+
+        <Button
+            android:id="@+id/enter_dialog_gps_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/gps"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/enter_dialog_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:text="@string/choose_measure_system"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/enter_dialog_celsius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/celsius" />
+
+        <RadioButton
+            android:id="@+id/enter_dialog_fahrenheit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fahrenheit" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/enter_dialog_exit_btn"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:text="@string/exit" />
+
+        <Button
+            android:id="@+id/enter_dialog_ok_btn"
+            android:layout_width="80dp"
+            android:layout_margin="16dp"
+            android:layout_height="match_parent"
+            android:text="@string/ok"/>
+
+    </LinearLayout>
+
+</LinearLayout>

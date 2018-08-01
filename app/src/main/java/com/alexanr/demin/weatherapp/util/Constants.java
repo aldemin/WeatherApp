@@ -22,10 +22,12 @@ public class Constants {
 
     //Requests cods
     public static final String REQUEST_TAG = "request";
+    public static final String REQUEST_MASSAGE_TAG = "requestMassage";
     public static final int REQUEST_OK_TAG = 200;
     public static final int REQUEST_FAILED_TAG = 404;
 
     //BroadCasts
     public static final String BROADCAST_DB_TAG = "broadcastDb";
-    public static final String BROADCAST_RETROFIT_TAG = "broadcastRetrofit";
+    public static final String BROADCAST_UPDATE_TAG = "broadcastDb";
+    public static final String BROADCAST_LOAD_TAG = "broadcastLoad";
 }

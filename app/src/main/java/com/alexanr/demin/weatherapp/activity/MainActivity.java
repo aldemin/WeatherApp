@@ -1,36 +1,25 @@
 package com.alexanr.demin.weatherapp.activity;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.alexanr.demin.weatherapp.R;
 import com.alexanr.demin.weatherapp.database.City;
 import com.alexanr.demin.weatherapp.database.Database;
+import com.alexanr.demin.weatherapp.fragment.EnterDialogFragment;
 import com.alexanr.demin.weatherapp.fragment.HistoryFragment;
 import com.alexanr.demin.weatherapp.fragment.TodayFragment;
 import com.alexanr.demin.weatherapp.network.WeatherLoader;
@@ -52,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView headerLastUpd;
     private TextView headerMeasureLabel;
     private FloatingActionButton FAB;
-    private AlertDialog.Builder dialog;
+    private EnterDialogFragment dialog;
     private TodayFragment todayFragment;
     private HistoryFragment historyFragment;
     private BroadcastReceiver receiver;
@@ -86,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Preferences.get().setCity(null);
 
         if (Preferences.get().getCity() == null) {
-            dialog.show();
+            dialog.show(getSupportFragmentManager(), "dialog");
         } else {
-            WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext());
+            WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext(), true);
         }
 
     }
@@ -162,68 +151,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initNewCityDialog() {
-        dialog = new AlertDialog.Builder(this);
-        final View dialogView = getLayoutInflater().inflate(R.layout.change_city_dialog, null);
+        dialog = new EnterDialogFragment();
+        dialog.setCancelable(false);
+/*        final View dialogView = getLayoutInflater().inflate(R.layout.change_city_dialog, null);
         final EditText editText = dialogView.findViewById(R.id.change_city);
         final RadioButton celsiusBtn = dialogView.findViewById(R.id.city_dialog_celsius);
         final Button gpsBtn = dialogView.findViewById(R.id.city_dialog_gps_btn);
         final TextView gps = dialogView.findViewById(R.id.change_dialo_gps);
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         celsiusBtn.setChecked(true);
-
-        final String latitude = null;
-        final String longitude = null;
-
-        gpsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        || ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        gpsBtn.setVisibility(View.GONE);
-                    }
-                    Criteria criteria = new Criteria();
-                    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-                    String provider = locationManager.getBestProvider(criteria, true);
-                    if (provider != null) {
-                        locationManager.requestLocationUpdates(provider, 100000, 500, new LocationListener() {
-                            @Override
-                            public void onLocationChanged(Location location) {
-                                String latitude = Double.toString(location.getLatitude());  // Широта
-                                String longitude = Double.toString(location.getLongitude());// Долгота
-                                editText.setVisibility(View.GONE);
-                                gps.setVisibility(View.VISIBLE);
-                                gps.setText(String.valueOf(latitude + " " + longitude));
-                            }
-
-                            @Override
-                            public void onStatusChanged(String provider, int status, Bundle extras) {
-                            }
-
-                            @Override
-                            public void onProviderEnabled(String provider) {
-                            }
-
-                            @Override
-                            public void onProviderDisabled(String provider) {
-                            }
-                        });
-                    }
-                } else {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE)) {
-                        // Запросим эти две пермиссии у пользователя
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{
-                                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                                        Manifest.permission.ACCESS_FINE_LOCATION
-                                }, 20);
-                    }
-                }
-            }
-        });
-
-
         dialog.setView(dialogView)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -244,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         })
                 .setCancelable(false)
-                .create();
+                .create();*/
 
     }
 
@@ -252,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext());
+                WeatherLoader.get().doRequest(Preferences.get().getCity(), getApplicationContext(), true);
             }
         });
     }
@@ -267,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         };
-        intentFilter = new IntentFilter(BROADCAST);
+        intentFilter = new IntentFilter(Constants.BROADCAST_UPDATE_TAG);
         registerReceiver(receiver, intentFilter);
     }
 
@@ -282,5 +218,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Preferences.get().setCity(intent.getStringExtra(Constants.PREF_CITY_TAG));
         inflateTodayFragment();
         inflateHeader();
+    }
+
+    @Override
+    public void finish() {
+        unregisterReceiver(receiver);
+        super.finish();
     }
 }

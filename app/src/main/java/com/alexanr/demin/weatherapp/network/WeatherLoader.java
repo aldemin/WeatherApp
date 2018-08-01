@@ -49,12 +49,17 @@ public class WeatherLoader {
         return weatherLoader;
     }
 
-    public void doRequest(String city, final Context context) {
+    public void doRequest(String city, final Context context, final boolean update) {
         weather.loadWeather(city, API_KEY)
                 .enqueue(new Callback<WeatherRequest>() {
                     @Override
                     public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
-                        Intent intent = new Intent(MainActivity.BROADCAST);
+                        Intent intent;
+                        if (update) {
+                            intent = new Intent(Constants.BROADCAST_UPDATE_TAG);
+                        } else {
+                            intent = new Intent(Constants.BROADCAST_LOAD_TAG);
+                        }
                         int requestCod;
                         if (response.body() != null) {
                             requestCod = response.body().getCod();
@@ -63,6 +68,7 @@ public class WeatherLoader {
                             requestCod = 404;
                         }
                         intent.putExtra(Constants.REQUEST_TAG, requestCod);
+                        intent.putExtra(Constants.REQUEST_MASSAGE_TAG, response.message());
                         context.sendBroadcast(intent);
                     }
 
